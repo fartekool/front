@@ -1,13 +1,7 @@
 // Генератор ответов ИИ для администрации
 // Вместо длинной заглушки теперь просто выводим переданный текст как ответ.
 // Так в интерфейсе отображается именно принятый (переданный) текст.
-function generateAdminAIResponse(text) {
-    return {
-        answer: text,
-        sources: [],
-        sourcesText: []
-    };
-}
+
 
 // Отправка текста вопроса на ваш сервер и получение ответа
 // Сейчас бэкенд (FastAPI, main.py) на /api/questions принимает { question }
@@ -17,7 +11,7 @@ async function sendQuestionToServer(question) {
     const authToken = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(`${API_ANDREW_URL}/api/questions`, {
+        const response = await fetch(`${API_AI_URL}/api/questions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,7 +35,7 @@ async function sendQuestionToServer(question) {
         };
     } catch (error) {
         return {
-            answer: 'НЕТ СВЯЗИ С СЕРВЕРОМ',
+            answer: 'Error: База данных временно недоступна. Пожалуйста, попробуйте позже.',
             sources: [],
             sourcesText: []
         };

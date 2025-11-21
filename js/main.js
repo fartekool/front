@@ -33,9 +33,8 @@ function initializeMainPage() {
                     timestamp: new Date().toISOString()
                 });
                 
-                if (chat.messages.length === 1) {
-                    chat.title = questionText.length > 30 ? questionText.substring(0, 30) + '...' : questionText;
-                }
+                // В заголовке всегда показываем последний запрос пользователя
+                chat.title = questionText.length > 30 ? questionText.substring(0, 30) + '...' : questionText;
                 
                 chat.lastUpdated = new Date().toISOString();
                 saveChats();
@@ -55,9 +54,6 @@ function initializeMainPage() {
             }
 
             // Если сервер ничего не вернул или произошла ошибка — используем заглушку
-            if (!aiResponse) {
-                aiResponse = generateAdminAIResponse(questionText);
-            }
             
             if (responseText) {
                 responseText.innerHTML = aiResponse.answer || aiResponse.text || '';
