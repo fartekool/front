@@ -65,7 +65,7 @@ async function sendQuestionToServer(question) {
             body: JSON.stringify({ question }),
         });
 
-        const data = await response.json();
+        const data = await response.json().json();
         
         if (!response.ok) {
             throw new Error(data.detail || 'Ошибка при получении ответа от сервера');
