@@ -15,45 +15,56 @@ function handleLogin() {
         loginButton.disabled = true;
         loginButton.textContent = 'Вход...';
         loginMessage.textContent = '';
-
-        try {
-            const response = await fetch(`${API_DB_URL}/api/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                const errorMessage = data.detail || 'Ошибка входа. Проверьте учетные данные.';
-                throw new Error(errorMessage);
-            }
-
-            const { token, email: userEmail } = data;
-            if (!token) throw new Error('Токен не получен.');
-
-            // Сохраняем токен и данные пользователя
-            localStorage.setItem('authToken', token);
-            currentUser = { email: userEmail };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-            // Показываем информацию пользователя
-            document.getElementById('userInfo').textContent = userEmail;
-
-            // Загружаем историю чатов и переходим на основную страницу
+        // Загружаем историю чатов и переходим на основную страницу
             loadChatHistory();
             showPage('mainPage');
 
             // Инициализируем функционал основной страницы
             initializeMainPage();
-        } catch (error) {
-            loginMessage.textContent = error.message;
-            console.error('Ошибка:', error);
-        } finally {
-            loginButton.disabled = false;
-            loginButton.textContent = 'Войти';
-        }
+        // try {
+        //     const response = await fetch(`${API_DB_URL}/api/auth/login`, {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({ email, password }),
+        //     });
+
+        //     const data = await response.json();
+
+        //     if (!response.ok) {
+        //         const errorMessage = data.detail || 'Ошибка входа. Проверьте учетные данные.';
+        //         throw new Error(errorMessage);
+        //     }
+
+        //     const { token, email: userEmail } = data;
+        //     if (!token) throw new Error('Токен не получен.');
+
+        //     // Сохраняем токен и данные пользователя
+        //     localStorage.setItem('authToken', token);
+        //     currentUser = { email: userEmail };
+        //     localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        //     // Показываем информацию пользователя
+        //     document.getElementById('userInfo').textContent = userEmail;
+
+        //     // Загружаем историю чатов и переходим на основную страницу
+        //     loadChatHistory();
+        //     showPage('mainPage');
+
+        //     // Инициализируем функционал основной страницы
+        //     initializeMainPage();
+        // } catch (error) {
+        //     loginMessage.textContent = error.message;
+        //     console.error('Ошибка:', error);
+        // } finally {
+        //     loginButton.disabled = false;
+        //     loginButton.textContent = 'Войти';
+        // }
+        // Загружаем историю чатов и переходим на основную страницу
+            loadChatHistory();
+            showPage('mainPage');
+
+            // Инициализируем функционал основной страницы
+            initializeMainPage();
     });
 }
 
