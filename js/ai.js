@@ -17,7 +17,7 @@ async function sendQuestionToServer(question) {
     const authToken = localStorage.getItem('authToken');
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/questions`, {
+        const response = await fetch(`${API_ANDREW_URL}/api/questions`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

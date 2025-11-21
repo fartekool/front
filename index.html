@@ -31,7 +31,6 @@
             display: flex;
         }
 
-        /* Стили для страницы авторизации из test.html */
         #loginPage {
             justify-content: center;
             align-items: center;
@@ -120,7 +119,7 @@
 
         .sidebar-header {
             padding: 20px;
-            background: #0054a6;
+            background: rgb(17, 44, 180);
             color: white;
         }
 
@@ -135,7 +134,7 @@
             border: none;
             margin: 0px 0px 0px 100px;
             padding: 1px 1px 1px 1px;
-            border-radius: 5px;
+            border-radius: 15px;
             cursor: pointer;
             width: 100px;
             font-size: 10px;
@@ -238,7 +237,7 @@
         }
 
         header {
-            background-color: #0054a6;
+            background-color: rgb(17, 44, 180);
             color: white;
             padding: 15px 20px;
             margin-bottom: 0;
@@ -698,22 +697,8 @@
             
             .chat-sidebar.open {
                 left: 0;
-            }
-            
-            .menu-toggle {
-                display: block;
-                position: fixed;
-                top: 15px;
-                left: 15px;
-                z-index: 1001;
-                background: #007bff;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            
+            }        
+                
             .hero-header {
                 flex-direction: column;
                 text-align: center;
@@ -757,14 +742,9 @@
             }
         }
 
-        .menu-toggle {
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <!-- Кнопка меню для мобильных -->
-    <button class="menu-toggle" onclick="toggleSidebar()">☰ История запросов</button>
 
     <!-- СТРАНИЦА АВТОРИЗАЦИИ  -->
     <div id="loginPage" class="page active">
@@ -815,7 +795,7 @@
             <div class="container">
                 <section class="hero">
                     <div class="hero-header">
-                        <h1>GorkyDoc - ИИ-помощник по нормативно-правовым актам</h1>
+                        <h1>ИИ-помощник по нормативно-правовым актам</h1>
                         <div class="help-tooltip">
                             <button class="help-icon" onmouseover="showHelp()" onmouseout="hideHelp()">?</button>
                             <div class="help-content" id="helpContent">
@@ -857,11 +837,11 @@
                     
                     <p class="hero-subtitle">Быстрый поиск и анализ документов для сотрудников администрации. Получайте точные ответы на основе действующего законодательства.</p>
                     
-                    <div class="search-container">
+                    <div class="`rch-container">
                         <div class="search-box-large">
-                            <input type="text" id="userQuestion" placeholder="Например: Каков порядок согласования муниципального контракта на закупку товаров для нужд администрации города? Какие документы необходимы и в какие сроки должен быть заключен контракт?">
+                            <input type="text" id="userQuestion" placeholder="Например: Какие льготы полагаются студентам?">
                             <button id="askButton" class="search-btn">
-                                <span class="btn-text">Найти ответ</span>
+                                <!-- <span class="btn-text">Найти ответ</span> -->
                                 <span class="btn-icon">🔍</span>
                             </button>
                         </div>

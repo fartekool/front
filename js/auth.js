@@ -45,11 +45,6 @@ function handleLogin() {
             loadChatHistory();
             showPage('mainPage');
 
-            // Создаем демо-чаты при первом входе
-            if (chats.length === 0) {
-                createDemoChats();
-            }
-
             // Инициализируем функционал основной страницы
             initializeMainPage();
         } catch (error) {
