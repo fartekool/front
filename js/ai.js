@@ -52,9 +52,7 @@ function copyResponse() {
     const responseText = document.getElementById('responseText');
     if (!responseText) return;
     
-    navigator.clipboard.writeText(responseText.innerText)
-        .then(() => alert('Ответ скопирован в буфер обмена'))
-        .catch(err => alert('Ошибка копирования: ' + err));
+    navigator.clipboard.writeText(responseText.innerText);
 }
 
 
