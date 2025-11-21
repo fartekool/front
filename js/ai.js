@@ -57,7 +57,4 @@ function copyResponse() {
         .catch(err => alert('Ошибка копирования: ' + err));
 }
 
-function saveResponse() {
-    alert('Функция сохранения ответа будет реализована в будущем обновлении');
-}
 
