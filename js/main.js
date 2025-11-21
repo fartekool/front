@@ -29,9 +29,6 @@ function initializeMainPage() {
             newAskButton.disabled = true;
             newAskButton.textContent = 'Отправка...';
 
-            question.value = '';
-            question.focus();
-
             try {
                 if (!currentChatId) {
                     createNewChat();
