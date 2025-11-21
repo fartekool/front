@@ -73,24 +73,13 @@ async function sendQuestionToServer(question) {
 
         // Ожидаем массив документов (либо напрямую массив, либо в поле documents)
         const documents = Array.isArray(data) ? data : (data.documents || []);
-        
         // Форматируем документы в HTML
         const formattedHtml = formatDocuments(documents);
         
-        return {
-            answer: formattedHtml,
-            documents: documents,
-            sources: [],
-            sourcesText: []
-        };
+        return formattedHtml;
     } catch (error) {
         console.error('Ошибка отправки вопроса на сервер:', error);
-        return {
-            answer: '<p>Ошибка: База данных временно недоступна. Пожалуйста, попробуйте позже.</p>',
-            documents: [],
-            sources: [],
-            sourcesText: []
-        };
+        return '<p>Ошибка: База данных временно недоступна. Пожалуйста, попробуйте позже.</p>';
     }
 }
 

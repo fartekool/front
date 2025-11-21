@@ -63,47 +63,30 @@ function initializeMainPage() {
                 }
     
                 let aiResponse;
-    
+
                 try {
                     // Пытаемся получить настоящий ответ от вашего сервера
                     if (typeof sendQuestionToServer === 'function') {
                         aiResponse = await sendQuestionToServer(questionText);
                     }
                 } catch (e) {
-                    // Если сервер вернул ошибку, используем локальную заглушку
+                    // Если сервер вернул ошибку, используем заглушку
                     aiResponse = null;
                 }
-    
+
                 if (!aiResponse) {
-                    aiResponse = {
-                        answer: 'Ответ временно недоступен. Пожалуйста, попробуйте позже.',
-                        sources: [],
-                        sourcesText: []
-                    };
+                    aiResponse = '<p>Ответ временно недоступен. Пожалуйста, попробуйте позже.</p>';
                 }
                 
                 if (responseText) {
-                    responseText.innerHTML = aiResponse.answer || aiResponse.text || '';
+                    responseText.innerHTML = aiResponse || '';
                 }
-                
-                const sourceLink1 = document.getElementById('sourceLink1');
-                const sourceLink2 = document.getElementById('sourceLink2');
-                
-                if (sourceLink1 && aiResponse.sources && aiResponse.sourcesText) {
-                    sourceLink1.href = aiResponse.sources[0] || '#';
-                    sourceLink1.textContent = aiResponse.sourcesText[0] || '';
-                }
-                if (sourceLink2 && aiResponse.sources && aiResponse.sourcesText) {
-                    sourceLink2.href = aiResponse.sources[1] || '#';
-                    sourceLink2.textContent = aiResponse.sourcesText[1] || '';
-                }
-    
+
                 if (chat) {
-                    const botText = aiResponse.answer || aiResponse.text || '';
-                    if (botText) {
+                    if (aiResponse) {
                         // Сохраняем HTML в сообщение для отображения
                         chat.messages.push({
-                            text: botText,
+                            text: aiResponse,
                             sender: 'bot',
                             timestamp: new Date().toISOString(),
                             isHtml: true // Флаг, что это HTML контент
