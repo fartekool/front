@@ -8,7 +8,7 @@ function initializeMainPage() {
         const newAskButton = askButton.cloneNode(true);
         askButton.parentNode.replaceChild(newAskButton, askButton);
         
-        newAskButton.addEventListener('click', function() {
+        newAskButton.addEventListener('click', async function() {
             const question = document.getElementById('userQuestion');
             if (!question) return;
             
@@ -42,33 +42,51 @@ function initializeMainPage() {
                 loadChatHistory();
             }
 
-            const aiResponse = generateAdminAIResponse(questionText);
+            let aiResponse;
+
+            try {
+                // Пытаемся получить настоящий ответ от вашего сервера
+                if (typeof sendQuestionToServer === 'function') {
+                    aiResponse = await sendQuestionToServer(questionText);
+                }
+            } catch (e) {
+                // Если сервер вернул ошибку, используем локальную заглушку
+                aiResponse = null;
+            }
+
+            // Если сервер ничего не вернул или произошла ошибка — используем заглушку
+            if (!aiResponse) {
+                aiResponse = generateAdminAIResponse(questionText);
+            }
             
             if (responseText) {
-                responseText.innerHTML = aiResponse.answer;
+                responseText.innerHTML = aiResponse.answer || aiResponse.text || '';
             }
             
             const sourceLink1 = document.getElementById('sourceLink1');
             const sourceLink2 = document.getElementById('sourceLink2');
             
-            if (sourceLink1) {
-                sourceLink1.href = aiResponse.sources[0];
-                sourceLink1.textContent = aiResponse.sourcesText[0];
+            if (sourceLink1 && aiResponse.sources && aiResponse.sourcesText) {
+                sourceLink1.href = aiResponse.sources[0] || '#';
+                sourceLink1.textContent = aiResponse.sourcesText[0] || '';
             }
-            if (sourceLink2) {
-                sourceLink2.href = aiResponse.sources[1];
-                sourceLink2.textContent = aiResponse.sourcesText[1];
+            if (sourceLink2 && aiResponse.sources && aiResponse.sourcesText) {
+                sourceLink2.href = aiResponse.sources[1] || '#';
+                sourceLink2.textContent = aiResponse.sourcesText[1] || '';
             }
 
             if (chat) {
-                chat.messages.push({
-                    text: aiResponse.answer,
-                    sender: 'bot',
-                    timestamp: new Date().toISOString()
-                });
-                chat.lastUpdated = new Date().toISOString();
-                saveChats();
-                loadChatHistory();
+                const botText = aiResponse.answer || aiResponse.text || '';
+                if (botText) {
+                    chat.messages.push({
+                        text: botText,
+                        sender: 'bot',
+                        timestamp: new Date().toISOString()
+                    });
+                    chat.lastUpdated = new Date().toISOString();
+                    saveChats();
+                    loadChatHistory();
+                }
             }
 
             if (responseArea) {
