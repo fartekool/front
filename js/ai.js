@@ -73,6 +73,7 @@ async function sendQuestionToServer(question) {
 
         // Ожидаем массив документов (либо напрямую массив, либо в поле documents)
         const documents = Array.isArray(data) ? data : (data.documents || []);
+        if (Array.isArray(documents) === false) { alert("Это не массив");}
         // Форматируем документы в HTML
         const formattedHtml = formatDocuments(documents);
         
