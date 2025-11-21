@@ -101,10 +101,12 @@ function initializeMainPage() {
                 if (chat) {
                     const botText = aiResponse.answer || aiResponse.text || '';
                     if (botText) {
+                        // Сохраняем HTML в сообщение для отображения
                         chat.messages.push({
                             text: botText,
                             sender: 'bot',
-                            timestamp: new Date().toISOString()
+                            timestamp: new Date().toISOString(),
+                            isHtml: true // Флаг, что это HTML контент
                         });
                         chat.lastUpdated = new Date().toISOString();
                         saveChats();

@@ -1,12 +1,57 @@
-// Генератор ответов ИИ для администрации
-// Вместо длинной заглушки теперь просто выводим переданный текст как ответ.
-// Так в интерфейсе отображается именно принятый (переданный) текст.
+// Функция для экранирования HTML-символов
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
+// Функция для форматирования массива документов в HTML
+function formatDocuments(documents) {
+    if (!documents || documents.length === 0) {
+        return '<p>Документы не найдены.</p>';
+    }
+
+    let html = '';
+    
+    documents.forEach((doc, index) => {
+        html += `<div class="document-item" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;">`;
+        html += `<h3 style="color: #0054a6; margin-bottom: 15px; font-size: 1.2em;">Документ ${index + 1}:</h3>`;
+        
+        if (doc.doc_name) {
+            html += `<p><strong>Заголовок:</strong> ${escapeHtml(doc.doc_name)}</p>`;
+        }
+        
+        if (doc.doc_number) {
+            html += `<p><strong>Номер документа:</strong> ${escapeHtml(doc.doc_number)}</p>`;
+        }
+        
+        if (doc.doc_date) {
+            html += `<p><strong>Дата:</strong> ${escapeHtml(doc.doc_date)}</p>`;
+        }
+        
+        if (doc.context_text) {
+            html += `<p><strong>Содержимое:</strong> ${escapeHtml(doc.context_text)}</p>`;
+        }
+        
+        if (doc.parsed_references && doc.parsed_references.length > 0) {
+            html += `<p><strong>Ссылки:</strong></p>`;
+            html += `<ul style="margin-left: 20px; margin-top: 5px;">`;
+            doc.parsed_references.forEach((ref, refIndex) => {
+                html += `<li style="margin-bottom: 5px;">${refIndex + 1}. ${escapeHtml(ref)}</li>`;
+            });
+            html += `</ul>`;
+        }
+        
+        html += `</div>`;
+    });
+    
+    return html;
+}
 
 // Отправка текста вопроса на ваш сервер и получение ответа
-// Сейчас бэкенд (FastAPI, main.py) на /api/questions принимает { question }
-// и возвращает объект вида { answer: "ПРИВЕТ" } — без sources/sourcesText.
-// Здесь мы адаптируем ответ к формату, ожидаемому интерфейсом.
+// Бэкенд возвращает массив документов в формате:
+// [{ doc_name, doc_number, doc_date, context_text, parsed_references: [] }]
 async function sendQuestionToServer(question) {
     const authToken = localStorage.getItem('authToken');
 
@@ -21,21 +66,28 @@ async function sendQuestionToServer(question) {
         });
 
         const data = await response.json();
-
+        
         if (!response.ok) {
             throw new Error(data.detail || 'Ошибка при получении ответа от сервера');
         }
 
-        // Бэкенд сейчас возвращает только { answer: "ПРИВЕТ" }.
-        // Приводим к единому формату, который использует интерфейс.
+        // Ожидаем массив документов (либо напрямую массив, либо в поле documents)
+        const documents = Array.isArray(data) ? data : (data.documents || []);
+        
+        // Форматируем документы в HTML
+        const formattedHtml = formatDocuments(documents);
+        
         return {
-            answer: data.answer ?? 'ПРИВЕТ',
+            answer: formattedHtml,
+            documents: documents,
             sources: [],
             sourcesText: []
         };
     } catch (error) {
+        console.error('Ошибка отправки вопроса на сервер:', error);
         return {
-            answer: 'Error: База данных временно недоступна. Пожалуйста, попробуйте позже.',
+            answer: '<p>Ошибка: База данных временно недоступна. Пожалуйста, попробуйте позже.</p>',
+            documents: [],
             sources: [],
             sourcesText: []
         };
