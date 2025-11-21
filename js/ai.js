@@ -51,8 +51,17 @@ async function sendQuestionToServer(question) {
 function copyResponse() {
     const responseText = document.getElementById('responseText');
     if (!responseText) return;
-    
+
+    const copyButton = document.getElementById('copyButton');
+    if (!copyButton) return;
+
+    copyButton.textContent = '✅ Скопировано';
+
     navigator.clipboard.writeText(responseText.innerText);
+
+    setTimeout(() => {
+        copyButton.textContent = '📋 Копировать'; 
+    }, 1000); 
 }
 
 
