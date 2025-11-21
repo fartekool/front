@@ -468,11 +468,16 @@
         #userQuestion {
             flex-grow: 1;
             padding: 20px 25px;
-            font-size: 16px;
+            font-size: 17px;
             border: none;
             outline: none;
             background: transparent;
-            font-size: 17px;
+            resize: none;
+            overflow-y: auto;
+            min-height: 60px;
+            max-height: 300px;
+            line-height: 1.5;
+            font-family: Arial, sans-serif;
         }
 
         .search-btn {
@@ -494,12 +499,32 @@
             transform: scale(1.02);
         }
 
+        .search-btn:hover:disabled {
+            transform: none;
+        }
+
         .btn-text {
             display: inline-block;
         }
 
         .btn-icon {
             font-size: 18px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .how-it-works {
@@ -839,7 +864,7 @@
                     
                     <div class="`rch-container">
                         <div class="search-box-large">
-                            <input type="text" id="userQuestion" placeholder="Например: Какие льготы полагаются студентам?">
+                            <textarea id="userQuestion" placeholder="Например: Какие льготы полагаются студентам?" rows="1"></textarea>
                             <button id="askButton" class="search-btn">
                                 <!-- <span class="btn-text">Найти ответ</span> -->
                                 <span class="btn-icon">🔍</span>

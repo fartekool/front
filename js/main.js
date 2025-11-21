@@ -1,5 +1,17 @@
 // Инициализация основной страницы
 
+// Функция для автоматического изменения высоты textarea
+function autoResizeTextarea(textarea) {
+    if (!textarea) return;
+    
+    // Сбрасываем высоту, чтобы получить правильный scrollHeight
+    textarea.style.height = 'auto';
+    
+    // Устанавливаем новую высоту на основе содержимого
+    const newHeight = Math.min(textarea.scrollHeight, 300); // max-height из CSS
+    textarea.style.height = newHeight + 'px';
+}
+
 function initializeMainPage() {
     const askButton = document.getElementById('askButton');
     if (askButton) {
@@ -23,11 +35,11 @@ function initializeMainPage() {
                 return;
             }
 
-            const defaultButtonText = newAskButton.dataset.defaultText || newAskButton.textContent;
-            newAskButton.dataset.defaultText = defaultButtonText;
+            const defaultButtonHTML = newAskButton.dataset.defaultHtml || newAskButton.innerHTML;
+            newAskButton.dataset.defaultHtml = defaultButtonHTML;
             newAskButton.dataset.loading = 'true';
             newAskButton.disabled = true;
-            newAskButton.textContent = 'Отправка...';
+            newAskButton.innerHTML = '<span class="spinner"></span>';
 
             try {
                 if (!currentChatId) {
@@ -106,19 +118,35 @@ function initializeMainPage() {
                 }
             } finally {
                 newAskButton.disabled = false;
-                newAskButton.textContent = newAskButton.dataset.defaultText || defaultButtonText;
+                newAskButton.innerHTML = newAskButton.dataset.defaultHtml || defaultButtonHTML;
                 newAskButton.dataset.loading = 'false';
+                
+                // Сбрасываем высоту textarea после отправки
+                if (question) {
+                    question.style.height = 'auto';
+                    autoResizeTextarea(question);
+                }
             }
         });
     }
 
-    // Обработчик нажатия Enter
+    // Обработчик для textarea с авто-высотой
     const userQuestion = document.getElementById('userQuestion');
     if (userQuestion) {
-        userQuestion.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+        // Автоматическое изменение высоты при вводе
+        userQuestion.addEventListener('input', function() {
+            autoResizeTextarea(this);
+        });
+        
+        // Инициализация высоты при загрузке
+        autoResizeTextarea(userQuestion);
+        
+        // Обработчик нажатия Enter (Shift+Enter для новой строки)
+        userQuestion.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 const askButton = document.getElementById('askButton');
-                if (askButton) {
+                if (askButton && askButton.dataset.loading !== 'true') {
                     askButton.click();
                 }
             }
